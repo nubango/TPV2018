@@ -31,6 +31,7 @@ public:
 	Vector2D operator*(double d)const;
 	// Operando producto de un vector por un escalar
 	double operator*(const Vector2D& d) const;
+
 	/// Para debug: operando para el cout
 	friend std::ostream& operator<<(std::ostream& os, const Vector2D& v);
 };

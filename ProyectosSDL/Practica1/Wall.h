@@ -9,7 +9,7 @@ typedef unsigned int uint;
 class Wall
 {
 private:
-	Vector2D absolutePos_ = Vector2D(0,0);
+	Vector2D absolutePos_ = { 0,0 };
 	uint width_ = 0,
 		height_ = 0;
 	Texture* texture_ = nullptr;

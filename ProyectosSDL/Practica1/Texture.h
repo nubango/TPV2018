@@ -36,6 +36,7 @@ public:
 	uint getNumCols() const { return numCols; };
 	SDL_Texture* getTexture() const { return texture; };
 
+	// Carga de archivo la textura, por defecto con una columna y una fila
 	void load(string filename, uint numRows = 1, uint numCols = 1);
 	// Carga la textura de un fichero, para dibujarla en la posicion proporcionada en su totalidad
 	void render(const SDL_Rect& rect, SDL_RendererFlip flip = SDL_FLIP_NONE) const;

@@ -1,4 +1,5 @@
 #include "Paddle.h"
+#include "Texture.h"
 
 void Paddle::render()
 {
@@ -8,7 +9,8 @@ void Paddle::render()
 
 void Paddle::update()
 {
-	/// absolutePos_.getX() += vel_.getX() * dir_.getX();
+	//absolutePos_.getX() = absolutePos_.getX + (vel_.getX() * vel_.getX());
+	//absolutePos_  = absolutePos_ + (vel_ * dir_);
 }
 
 void Paddle::handleEvents(SDL_Event & event)
@@ -16,5 +18,5 @@ void Paddle::handleEvents(SDL_Event & event)
 	if (event.type == SDLK_RIGHT)
 		dir_.setX(1.0);
 	if (event.type == SDLK_LEFT)
-		dir_.setY(-1.0);
+		dir_.setX(-1.0);
 }

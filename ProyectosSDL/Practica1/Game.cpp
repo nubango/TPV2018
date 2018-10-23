@@ -2,27 +2,28 @@
 
 Game::Game()
 {
-	// We first initialize SDL
+	// Se inicializa SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window_ = SDL_CreateWindow("Ejercicio 3", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
 	if (window_ == nullptr || renderer_ == nullptr) throw "Error loading the SDL window or renderer";
 
-	// We now create the textures
+	// Se crean las texturas
 	for (uint i = 0; i < NUM_TEXTURES; i++)
 	{
 		textures_[i] = new Texture(renderer_);
-		textures_[i]->load(texturefiles[i].filename, texturefiles[i].rows, texturefiles[i].cols);
+		textures_[i]->load(IMAGE_PATH + textureAttributes_[i].filename, textureAttributes_[i].rows, textureAttributes_[i].cols);
 	}
 
-	// We finally create the game objects
-	ball_ = new Ball({ WIN_WIDTH / 2 - 5,WIN_HEIGHT - 100 }, 10, 10, textures_[BallTex], this);
-	paddle_ = new Paddle({ WIN_WIDTH / 2 - 50,WIN_HEIGHT - 20 }, 100, 10, textures_[PaddleTex]);
-	sidewallleft_ = new Wall({ 0,0 }, 20, WIN_HEIGHT, textures_[SideWallTex]);
-	sidewallright_ = new Wall({ WIN_WIDTH - 20,0 }, 20, WIN_HEIGHT, textures_[SideWallTex]);
-	topwall_ = new Wall({ 0,0 }, WIN_WIDTH, 20, textures_[TopWallTex]);
-	blocksmap_ = new BlocksMap();
+	// Se crean los objetos de la escena
+	ball_ = new Ball({ WIN_WIDTH / 2 - 5,WIN_HEIGHT - 100 }, BALL_SIZE, BALL_SIZE, textures_[BallTex], this);
+	paddle_ = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH/2,WIN_HEIGHT - 20 }, PADDLE_WIDTH, 10, textures_[PaddleTex]);
+	sidewallleft_ = new Wall({ 0,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
+	sidewallright_ = new Wall({ WIN_WIDTH - WALL_WIDTH,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
+	topwall_ = new Wall({ 0,0 }, WIN_WIDTH, WALL_WIDTH, textures_[TopWallTex]);
+	blocksmap_ = new BlocksMap(WIN_HEIGHT/2, WIN_WIDTH, this);
+	blocksmap_->load(LEVEL_PATH + to_string(3) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
 }
 
 Game::~Game()
@@ -64,9 +65,9 @@ void Game::render()
 	topwall_->render();
 	sidewallleft_->render();
 	sidewallright_->render();
-	blocksmap_->render();
 	ball_->render();
 	paddle_->render();
+	blocksmap_->render();
 	SDL_RenderPresent(renderer_);
 }
 
@@ -87,7 +88,7 @@ void Game::handleEvents()
 	}
 }
 
-Vector2D Game::collides()
+bool Game::collides(Vector2D & collider)
 {
-	return Vector2D();
+	return false;
 }

@@ -1,3 +1,7 @@
+/// GRUPO 04
+/// Nuria Bango Iglesias
+/// Javier Camacho Carrasco
+
 #include "checkML.h"
 #include <iostream>
 #include "Game.h"

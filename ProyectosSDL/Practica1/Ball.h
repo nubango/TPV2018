@@ -6,7 +6,7 @@
 
 typedef unsigned int uint;
 
-class Game;
+class Game; // Por la inclusion circular
 
 class Ball
 {
