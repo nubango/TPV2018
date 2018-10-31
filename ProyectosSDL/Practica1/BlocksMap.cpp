@@ -19,6 +19,11 @@ BlocksMap::~BlocksMap()
 	}
 }
 
+uint BlocksMap::getBottomLimit()
+{
+	return (WIN_HEIGHT - WALL_WIDTH) / 2;
+}
+
 void BlocksMap::load(string const& filename)
 {
 	ifstream file;
@@ -64,7 +69,66 @@ void BlocksMap::render()
 	}
 }
 
-Block * BlocksMap::collides(Vector2D vecBall)
+Block * BlocksMap::collides(const SDL_Rect& ballRect, const Vector2D& ballVel, Vector2D & collVector)
+{
+	/*Vector2D p0 = { ballRect.x, ballRect.y }; // top-left
+	Vector2D p1 = { ballRect.x + ballRect.w, ballRect.y }; // top-right
+	Vector2D p2 = { ballRect.x, ballRect.y + ballRect.h }; // bottom-left
+	Vector2D p3 = { ballRect.x + ballRect.w, ballRect.y + ballRect.h }; // bottom-right
+	Block* b = nullptr;
+	if (ballVel.getX() < 0 && ballVel.getY() < 0) {
+		if ((b = blockAt(p0))) {
+			if ((b->getY() + b->getH() - p0.getY()) <= (b->getX() + b->getW() - p0.getX()))
+				collVector = { 0,1 }; // Borde inferior mas cerca de p0
+			else
+				collVector = { 1,0 }; // Borde dcho mas cerca de p0
+		}
+		else if ((b = blockAt(p1))) {
+			collVector = { 0,1 };
+		}
+		else if ((b = blockAt(p2))) collVector = { 1,0 };
+	}
+	else if (ballVel.getX() >= 0 && ballVel.getY() < 0) {
+		if ((b = blockAt(p1))) {
+			if (((b->getY() + b->getH() - p1.getY()) <= (p1.getX() - b->getX())) || ballVel.getX() == 0)
+				collVector = { 0,1 }; // Borde inferior mas cerca de p1
+			else
+				collVector = { -1,0 }; // Borde izqdo mas cerca de p1
+		}
+		else if ((b = blockAt(p0))) {
+			collVector = { 0,1 };
+		}
+		else if ((b = blockAt(p3))) collVector = { -1,0 };
+	}
+	else if (ballVel.getX() > 0 && ballVel.getY() > 0) {
+		if ((b = blockAt(p3))) {
+			if (((p3.getY() - b->getY()) <= (p3.getX() - b->getX()))) // || ballVel.getX() == 0)
+				collVector = { 0,-1 }; // Borde superior mas cerca de p3
+			else
+				collVector = { -1,0 }; // Borde dcho mas cerca de p3
+		}
+		else if ((b = blockAt(p2))) {
+			collVector = { 0,-1 };
+		}
+		else if ((b = blockAt(p1))) collVector = { -1,0 };
+	}
+	else if (ballVel.getX() < 0 && ballVel.getY() > 0) {
+		if ((b = blockAt(p2))) {
+			if (((p2.getY() - b->getY()) <= (b->getX() + b->getW() - p2.getX()))) // || ballVel.getX() == 0)
+				collVector = { 0,-1 }; // Borde superior mas cerca de p2
+			else
+				collVector = { 1,0 }; // Borde dcho mas cerca de p0
+		}
+		else if ((b = blockAt(p3))) {
+			collVector = { 0,-1 };
+		}
+		else if ((b = blockAt(p0))) collVector = { 1,0 };
+	}
+	return b;*/
+	return nullptr;
+}
+
+Block * BlocksMap::blockAt(const Vector2D & pos)
 {
 	return nullptr;
 }

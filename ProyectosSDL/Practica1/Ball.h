@@ -11,9 +11,8 @@ class Game; // Por la inclusion circular
 class Ball
 {
 private:
-	Vector2D absolutePos_ = Vector2D(0, 0),
-		dir_ = Vector2D(1, 0),
-		vel_ = Vector2D(1, 0);
+	Vector2D pos_ = Vector2D(0, 0),
+		vel_ = Vector2D(-3, -3);
 	uint width_ = 0,
 		height_ = 0;
 	Texture* texture_ = nullptr;
@@ -22,10 +21,17 @@ private:
 public:
 	Ball() {}
 	Ball(Vector2D absolutePos, uint width, uint height, Texture* texture, Game* game) :
-		absolutePos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game) {}
+		pos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game) {}
 	Ball(Vector2D absolutePos, uint width, uint height, Texture* texture, Game* game, Vector2D vel) :
-		absolutePos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game), vel_(vel) {}
+		pos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game), vel_(vel) {}
 	~Ball() {}
+
+	// Gets
+	Vector2D getVel() { return vel_; };
+	Vector2D getPos() { return pos_; };
+
+	// Devuelve el SDL_Rect de la bola
+	SDL_Rect getDestRect() { return { (int)pos_.getX(), (int)pos_.getY(), (int)width_, (int)height_ }; }
 
 	// Dibuja en pantalla el estado actual de la bola
 	void render();

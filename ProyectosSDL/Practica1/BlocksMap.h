@@ -27,12 +27,19 @@ public:
 	~BlocksMap();
 
 	// Para consultar cuantos bloques quedan
-	uint getblocksLeft() { return numBlocks_; };
+	uint getNumBlocks() { return numBlocks_; };
+	// Devuelve la posicion inferior del mapa de bloques
+	uint getBottomLimit();
+
+	// Destruye el bloque (se llama desde Game cuando la bola colisione)
+	void hitBlock(Block* block) { block = nullptr; }
 
 	// Carga de fichero el mapa
 	void load(string const& filename);
 	// Renderiza los bloques
 	void render();
-	// Determina el bloque y el vector de colision
-	Block* collides(Vector2D vecBall);
+	// Determina el bloque y el vector de colision dadas las dimensiones y el vector de velocidad de la bola
+	Block* collides(const SDL_Rect& ballRect, const Vector2D& ballVel, Vector2D & collVector);
+	// Devuelve el bloque al que pertenece el punto p
+	Block* blockAt(const Vector2D& pos);
 };

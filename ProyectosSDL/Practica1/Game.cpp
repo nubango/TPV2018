@@ -18,12 +18,12 @@ Game::Game()
 
 	// Se crean los objetos de la escena
 	ball_ = new Ball({ WIN_WIDTH / 2 - 5,WIN_HEIGHT - 100 }, BALL_SIZE, BALL_SIZE, textures_[BallTex], this);
-	paddle_ = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH/2,WIN_HEIGHT - 20 }, PADDLE_WIDTH, 10, textures_[PaddleTex]);
+	paddle_ = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, PADDLE_WIDTH, 10, textures_[PaddleTex]);
 	sidewallleft_ = new Wall({ 0,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
 	sidewallright_ = new Wall({ WIN_WIDTH - WALL_WIDTH,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
 	topwall_ = new Wall({ 0,0 }, WIN_WIDTH, WALL_WIDTH, textures_[TopWallTex]);
-	blocksmap_ = new BlocksMap(WIN_HEIGHT/2, WIN_WIDTH, this);
-	blocksmap_->load(LEVEL_PATH + to_string(3) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
+	blocksmap_ = new BlocksMap(WIN_HEIGHT / 2, WIN_WIDTH, this);
+	blocksmap_->load(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
 }
 
 Game::~Game()
@@ -62,6 +62,7 @@ void Game::run()
 
 void Game::render()
 {
+	SDL_RenderClear(renderer_);
 	topwall_->render();
 	sidewallleft_->render();
 	sidewallright_->render();
@@ -88,7 +89,26 @@ void Game::handleEvents()
 	}
 }
 
-bool Game::collides(Vector2D & collider)
+bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
-	return false;
+	// Si la componente Y de la bola esta en el espacio del mapa de bloques
+	if (ball_->getPos().getY() > blocksmap_->getBottomLimit())
+	{
+		Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(),collVector);
+		if (block != nullptr)
+		{
+			blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+			if (blocksmap_->getNumBlocks() == 0)
+				win_ = true;
+		}
+		return true;
+	}
+
+	// Muros
+	// SDL_IntersectRect o SDL_HasIntersection
+	// Los muros su metodo collides, los muros saben cual es su vector perpendicular y se crea en el constructor
+
+	// Paddle
+	if (paddle_->collides(collVector))
+		return true;
 }

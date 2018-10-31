@@ -55,11 +55,11 @@ private:
 
 	// Booleanos de control de juego
 	bool exit_ = false,
-		gameover_ = false,
-		win_ = false;
+		win_ = false,
+		gameover_ = false;
 
 	// Variable para el numero de nivel
-	int numLevel = 1;
+	int numLevel_ = 1;
 
 	// Array de punteros a las texturas del juego
 	Texture* textures_[NUM_TEXTURES];
@@ -79,5 +79,5 @@ public:
 	// Maneja eventos de teclado y raton
 	void handleEvents();
 	// Determina si la pelota colisiona con algun objeto y devuelve el vector de colision	
-	bool collides(Vector2D& collider);
+	bool collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector);
 };
