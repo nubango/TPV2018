@@ -1,5 +1,3 @@
-/// Representa a la plataforma del juego
-
 #pragma once
 #include "Vector2D.h"
 #include "Texture.h"
@@ -19,11 +17,7 @@ private:
 	double velocity = 5;
 
 public:
-	Paddle() {}
-	Paddle(Vector2D absolutePos, uint width, uint height, Texture* texture) :
-		pos_(absolutePos), width_(width), height_(height), texture_(texture) {}
-	Paddle(Vector2D absolutePos, uint width, uint height, Texture* texture, Vector2D vel) :
-		pos_(absolutePos), width_(width), height_(height), texture_(texture), vel_(vel) {}
+	Paddle(Vector2D absolutePos, uint width, uint height, Texture* texture);
 	~Paddle() {}
 
 	// Dibuja en pantalla el estado actual

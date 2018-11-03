@@ -85,6 +85,11 @@ void Game::handleEvents()
 	{
 		if (event.type == SDL_QUIT)
 			exit_ = true;
+		if (event.type == SDL_KEYDOWN)
+		{
+			if (event.key.keysym.sym == SDLK_ESCAPE)
+				exit_ = true;
+		}
 		paddle_->handleEvents(event);
 	}
 }
@@ -94,7 +99,7 @@ bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVe
 	// Si la componente Y de la bola esta en el espacio del mapa de bloques
 	if (ball_->getPos().getY() > blocksmap_->getBottomLimit())
 	{
-		Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(),collVector);
+		Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(), collVector);
 		if (block != nullptr)
 		{
 			blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
@@ -105,8 +110,9 @@ bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVe
 	}
 
 	// Muros
-	// SDL_IntersectRect o SDL_HasIntersection
-	// Los muros su metodo collides, los muros saben cual es su vector perpendicular y se crea en el constructor
+	// if (SDL_HasIntersection(&rect, &rect));
+	if (topwall_->collides(collVector) || sidewallright_->collides(collVector) || sidewallleft_->collides(collVector))
+		return true;
 
 	// Paddle
 	if (paddle_->collides(collVector))

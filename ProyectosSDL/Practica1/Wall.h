@@ -1,5 +1,3 @@
-/// Representa los muros del juego
-
 #pragma once
 #include "Vector2D.h"
 #include "Texture.h"
@@ -14,10 +12,14 @@ private:
 		height_ = 0;
 	Texture* texture_ = nullptr;
 
+	Vector2D perpendicular_ = { 0,0 };
+
 public:
-	Wall() {};
 	Wall(Vector2D pos, uint width, uint height, Texture* texture);
 	~Wall() {};
+
+	// Gets
+	Vector2D getPerpendicular() { return perpendicular_; }
 
 	// Se dibuja el estado actual en pantalla
 	void render() const;

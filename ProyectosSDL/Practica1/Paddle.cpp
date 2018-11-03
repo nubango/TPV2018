@@ -1,6 +1,11 @@
 #include "Paddle.h"
 #include "Texture.h"
 
+Paddle::Paddle(Vector2D absolutePos, uint width, uint height, Texture * texture) :
+	pos_(absolutePos), width_(width), height_(height), texture_(texture)
+{
+}
+
 void Paddle::render()
 {
 	SDL_Rect destRect = { pos_.getX(),pos_.getY(),width_,height_ };

@@ -1,6 +1,3 @@
-/// Contiene informacion relativa a una textura
-/// y metodos para cargarla y pintarla
-
 #ifndef TextureH
 #define TextureH
 

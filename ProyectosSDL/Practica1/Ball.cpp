@@ -1,6 +1,11 @@
 #include "Ball.h"
 #include "Game.h" // Por la inclusion circular
 
+Ball::Ball(Vector2D absolutePos, uint width, uint height, Texture * texture, Game * game) :
+	pos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game)
+{
+}
+
 void Ball::render()
 {
 	SDL_Rect destRect = { pos_.getX(),pos_.getY(),width_,height_ };
@@ -10,9 +15,8 @@ void Ball::render()
 void Ball::update()
 {
 	Vector2D prevPos = pos_;
-	Vector2D collVector;
 	SDL_Rect ballRect = getDestRect();
-	// colVector es el vector perpendicular del objeto contra el que choca
+	Vector2D collVector; // collVector es el vector perpendicular del objeto contra el que choca
 	// colVector contra el paddle es distinto, depende de la zona donde colisione
 	collVector.normalize();
 	if (game_->collides(ballRect, vel_, collVector))

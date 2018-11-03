@@ -1,6 +1,11 @@
 #include "Block.h"
 #include "Game.h"
 
+Block::Block(uint color, uint row, uint col, Texture * texture) :
+	color_(color), row_(row), col_(col), texture_(texture)
+{
+}
+
 void Block::render()
 {
 	int row = 0;

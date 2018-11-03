@@ -1,5 +1,3 @@
-/// Representa a los bloques del juego
-
 #pragma once
 #include "Vector2D.h"
 #include "Texture.h"
@@ -9,7 +7,7 @@ typedef unsigned int uint;
 class Block
 {
 private:
-	Vector2D absolutePos_ = { 0,0 };
+	Vector2D pos_ = { 0,0 };
 	uint width_ = 0,
 		height_ = 0;
 	Texture* texture_ = nullptr;
@@ -19,13 +17,16 @@ private:
 		col_; // Columna en el mapa de bloques
 
 public:
-	Block() {}
-	Block(uint color, uint row, uint col, Texture* texture) :
-		color_(color), row_(row), col_(col), texture_(texture) {}
+	Block(uint color, uint row, uint col, Texture* texture);
 	~Block() {}
 
 	void setWidth(uint width) { width_ = width; }
 	void setHeight(uint height) { height_ = height; }
+
+	double getX() { return pos_.getX(); }
+	double getY() { return pos_.getY(); }
+	uint getW() { return width_; }
+	uint getH() { return height_; }
 
 	// Dibuja el bloque en pantalla
 	void render();

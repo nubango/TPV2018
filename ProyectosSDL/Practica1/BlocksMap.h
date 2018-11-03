@@ -1,7 +1,4 @@
-/// Contiene el mapa de bloques del juego
-
 #pragma once
-
 #include "Block.h"
 #include <fstream>
 
@@ -21,9 +18,7 @@ private:
 	Texture* texture_ = nullptr;
 
 public:
-	BlocksMap() {}
-	BlocksMap(uint height, uint width, Game* game) :
-		height_(height), width_(width), game_(game) {}
+	BlocksMap(uint height, uint width, Game* game);
 	~BlocksMap();
 
 	// Para consultar cuantos bloques quedan
@@ -38,8 +33,9 @@ public:
 	void load(string const& filename);
 	// Renderiza los bloques
 	void render();
-	// Determina el bloque y el vector de colision dadas las dimensiones y el vector de velocidad de la bola
+	// Dados el rectangulo y vector de direccion de la pelota, devuelve un puntero al bloque con el que 
+	// esta colisiona (nullptr si no colisiona con nadie) y el vector normal perpendicular a la superficie de colisión.
 	Block* collides(const SDL_Rect& ballRect, const Vector2D& ballVel, Vector2D & collVector);
-	// Devuelve el bloque al que pertenece el punto p
+	// Devuelve el puntero al bloque del mapa de bloques al que pertenece el punto p
 	Block* blockAt(const Vector2D& pos);
 };

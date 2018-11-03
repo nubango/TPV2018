@@ -3,7 +3,8 @@
 Wall::Wall(Vector2D pos, uint width, uint height, Texture * texture) :
 	pos_(pos), width_(width), height_(height), texture_(texture)
 {
-
+	perpendicular_ = { pos_.getY(), -pos_.getX() };
+	perpendicular_.normalize();
 }
 
 void Wall::render() const

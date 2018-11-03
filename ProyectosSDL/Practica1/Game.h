@@ -23,7 +23,7 @@ const string LEVEL_EXTENSION = ".ark";
 enum TextureName { BallTex, BricksTex, PaddleTex, SideWallTex, TopWallTex };
 
 // Struct con los atributos de la textura: path, filas y columnas
-typedef struct TextureAttributes {
+struct TextureAttributes {
 	std::string filename;
 	uint rows;
 	uint cols;

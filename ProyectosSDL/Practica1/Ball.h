@@ -1,5 +1,3 @@
-/// Representa la pelota del juego
-
 #pragma once
 #include "Vector2D.h"
 #include "Texture.h"
@@ -19,11 +17,7 @@ private:
 	Game* game_ = nullptr;
 
 public:
-	Ball() {}
-	Ball(Vector2D absolutePos, uint width, uint height, Texture* texture, Game* game) :
-		pos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game) {}
-	Ball(Vector2D absolutePos, uint width, uint height, Texture* texture, Game* game, Vector2D vel) :
-		pos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game), vel_(vel) {}
+	Ball(Vector2D absolutePos, uint width, uint height, Texture* texture, Game* game);
 	~Ball() {}
 
 	// Gets
