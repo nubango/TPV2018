@@ -7,6 +7,7 @@
 
 typedef unsigned int uint;
 
+const uint WIN_WIDTH_PLUS_HUD = 1000;
 const uint WIN_WIDTH = 800;
 const uint WIN_HEIGHT = 600;
 const uint NUM_TEXTURES = 5;
@@ -17,7 +18,6 @@ const uint BALL_SIZE = 10;
 const string IMAGE_PATH = "..\\sprites\\";
 const string LEVEL_PATH = "..\\levels\\level0";
 const string LEVEL_EXTENSION = ".ark";
-/// Velocidades, tamanos
 
 // Indices para el array de texturas
 enum TextureName { BallTex, BricksTex, PaddleTex, SideWallTex, TopWallTex };
@@ -60,6 +60,8 @@ private:
 
 	// Variable para el numero de nivel
 	int numLevel_ = 1;
+
+	int lives_ = 3;
 
 	// Array de punteros a las texturas del juego
 	Texture* textures_[NUM_TEXTURES];

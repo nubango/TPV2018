@@ -10,7 +10,7 @@ class Ball
 {
 private:
 	Vector2D pos_ = Vector2D(0, 0),
-		vel_ = Vector2D(-3, -3);
+		vel_ = Vector2D(3, -3);
 	uint width_ = 0,
 		height_ = 0;
 	Texture* texture_ = nullptr;

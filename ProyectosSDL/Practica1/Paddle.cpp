@@ -1,5 +1,5 @@
 #include "Paddle.h"
-#include "Texture.h"
+#include "Game.h" // Para acceder a la variables constantes
 
 Paddle::Paddle(Vector2D absolutePos, uint width, uint height, Texture * texture) :
 	pos_(absolutePos), width_(width), height_(height), texture_(texture)
@@ -16,8 +16,9 @@ void Paddle::update()
 {
 	Vector2D nextPos;
 	nextPos = pos_ + vel_;
-
-	pos_ = nextPos;
+	// Solo se mueve si la siguiente posicion es valida
+	if (nextPos.getX() > WALL_WIDTH && nextPos.getX() < WIN_WIDTH - WALL_WIDTH - width_)
+		pos_ = nextPos;
 }
 
 void Paddle::handleEvents(SDL_Event & event)
@@ -29,9 +30,14 @@ void Paddle::handleEvents(SDL_Event & event)
 		if (event.key.keysym.sym == SDLK_LEFT)
 			vel_.setX(-velocity);
 	}
+	if (event.type == SDL_KEYUP)
+		vel_.setX(0);
 }
 
 bool Paddle::collides(Vector2D & collVector)
 {
+	// collVector contra el paddle es distinto, depende de la zona donde colisione
+	collVector = { pos_.getY(), -pos_.getX() };
+	collVector.normalize();
 	return false;
 }

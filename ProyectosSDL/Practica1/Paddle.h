@@ -14,7 +14,7 @@ private:
 
 	Texture* texture_ = nullptr;
 
-	double velocity = 5;
+	double velocity = 10;
 
 public:
 	Paddle(Vector2D absolutePos, uint width, uint height, Texture* texture);

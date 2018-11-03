@@ -14,13 +14,13 @@ void Ball::render()
 
 void Ball::update()
 {
-	Vector2D prevPos = pos_;
 	SDL_Rect ballRect = getDestRect();
-	Vector2D collVector; // collVector es el vector perpendicular del objeto contra el que choca
-	// colVector contra el paddle es distinto, depende de la zona donde colisione
-	collVector.normalize();
+	Vector2D prevPos = pos_;
+	Vector2D collVector = { 0,0 };
+	// collVector es el vector perpendicular del objeto contra el que choca
 	if (game_->collides(ballRect, vel_, collVector))
 	{
+		collVector.normalize();
 		// Aplicamos la reflexion
 		vel_ = vel_ - collVector * (2 * (vel_*collVector));
 		pos_ = prevPos + vel_;
