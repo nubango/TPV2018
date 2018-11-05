@@ -17,7 +17,7 @@ private:
 	double velocity = 10;
 
 public:
-	Paddle(Vector2D absolutePos, uint width, uint height, Texture* texture);
+	Paddle(Vector2D pos, uint width, uint height, Texture* texture);
 	~Paddle() {}
 
 	// Dibuja en pantalla el estado actual

@@ -18,9 +18,6 @@ public:
 	Wall(Vector2D pos, uint width, uint height, Texture* texture);
 	~Wall() {};
 
-	// Gets
-	Vector2D getPerpendicular() { return perpendicular_; }
-
 	// Se dibuja el estado actual en pantalla
 	void render() const;
 	// Determina el vector de colision con la pelota

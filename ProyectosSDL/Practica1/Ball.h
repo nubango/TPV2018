@@ -17,7 +17,7 @@ private:
 	Game* game_ = nullptr;
 
 public:
-	Ball(Vector2D absolutePos, uint width, uint height, Texture* texture, Game* game);
+	Ball(Vector2D pos, uint width, uint height, Texture* texture, Game* game);
 	~Ball() {}
 
 	// Gets

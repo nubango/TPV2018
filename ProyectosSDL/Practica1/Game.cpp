@@ -18,12 +18,13 @@ Game::Game()
 
 	// Se crean los objetos de la escena
 	ball_ = new Ball({ WIN_WIDTH / 2,WIN_HEIGHT - 30 }, BALL_SIZE, BALL_SIZE, textures_[BallTex], this);
-	paddle_ = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, PADDLE_WIDTH, 10, textures_[PaddleTex]);
+	paddle_ = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, PADDLE_WIDTH, PADDLE_HEIGHT, textures_[PaddleTex]);
 	sidewallleft_ = new Wall({ 0,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
 	sidewallright_ = new Wall({ WIN_WIDTH - WALL_WIDTH,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
 	topwall_ = new Wall({ 0,0 }, WIN_WIDTH, WALL_WIDTH, textures_[TopWallTex]);
 	blocksmap_ = new BlocksMap(WIN_HEIGHT / 2, WIN_WIDTH, this);
 	blocksmap_->load(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
+	hud_ = new HUD({ WIN_WIDTH_PLUS_HUD - (WIN_WIDTH_PLUS_HUD - WIN_WIDTH), 0 }, WIN_WIDTH_PLUS_HUD - WIN_WIDTH, WIN_HEIGHT, textures_[PaddleTex], textures_[LogoTex], textures_[NumbersTex], this);
 }
 
 Game::~Game()
@@ -36,12 +37,14 @@ Game::~Game()
 	delete sidewallright_;
 	delete topwall_;
 	delete blocksmap_;
+	delete hud_;
 	ball_ = nullptr;
 	paddle_ = nullptr;
 	sidewallleft_ = nullptr;
 	sidewallright_ = nullptr;
 	topwall_ = nullptr;
 	blocksmap_ = nullptr;
+	hud_ = nullptr;
 	SDL_DestroyRenderer(renderer_);
 	SDL_DestroyWindow(window_);
 	SDL_Quit();
@@ -69,11 +72,12 @@ void Game::render()
 	ball_->render();
 	paddle_->render();
 	blocksmap_->render();
+	hud_->render();
 	SDL_RenderPresent(renderer_);
 
 	// DEBUG POR CONSOLA
 	system("cls");
-	cout << "Lives: " << lives_ << endl;
+	cout << "Lives: " << numLives_ << endl;
 	cout << "Level " << numLevel_ << endl;
 	cout << "Ball position: { " << ball_->getPos().getX() << " , " << ball_->getPos().getY() << " }" << endl;
 	cout << "Ball direction: { " << ball_->getVel().getX() << " , " << ball_->getVel().getY() << " }" << endl;
@@ -104,7 +108,7 @@ void Game::handleEvents()
 bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
 	// Si la componente Y de la bola esta en el espacio del mapa de bloques
-	if (ball_->getPos().getY() > blocksmap_->getBottomLimit())
+	if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
 	{
 		Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(), collVector);
 		if (block != nullptr)
@@ -122,6 +126,7 @@ bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVe
 		return true;
 
 	// Paddle
+	// if (SDL_HasIntersection(&rect, &rect));
 	if (paddle_->collides(collVector))
 		return true;
 }

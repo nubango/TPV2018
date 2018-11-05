@@ -1,8 +1,8 @@
 #include "Paddle.h"
 #include "Game.h" // Para acceder a la variables constantes
 
-Paddle::Paddle(Vector2D absolutePos, uint width, uint height, Texture * texture) :
-	pos_(absolutePos), width_(width), height_(height), texture_(texture)
+Paddle::Paddle(Vector2D pos, uint width, uint height, Texture * texture) :
+	pos_(pos), width_(width), height_(height), texture_(texture)
 {
 }
 
@@ -38,6 +38,5 @@ bool Paddle::collides(Vector2D & collVector)
 {
 	// collVector contra el paddle es distinto, depende de la zona donde colisione
 	collVector = { pos_.getY(), -pos_.getX() };
-	collVector.normalize();
 	return false;
 }

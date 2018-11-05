@@ -1,8 +1,8 @@
 #include "Ball.h"
 #include "Game.h" // Por la inclusion circular
 
-Ball::Ball(Vector2D absolutePos, uint width, uint height, Texture * texture, Game * game) :
-	pos_(absolutePos), width_(width), height_(height), texture_(texture), game_(game)
+Ball::Ball(Vector2D pos, uint width, uint height, Texture * texture, Game * game) :
+	pos_(pos), width_(width), height_(height), texture_(texture), game_(game)
 {
 }
 

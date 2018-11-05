@@ -14,7 +14,6 @@ void Wall::render() const
 
 bool Wall::collides(Vector2D & collVector)
 {
-	collVector = getPerpendicular();
-	collVector.normalize();
+	collVector = perpendicular_;
 	return true;
 }
