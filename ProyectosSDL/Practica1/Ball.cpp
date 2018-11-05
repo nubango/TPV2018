@@ -15,14 +15,17 @@ void Ball::render()
 void Ball::update()
 {
 	SDL_Rect ballRect = getDestRect();
-	Vector2D prevPos = pos_;
-	Vector2D collVector = { 0,0 };
+	Vector2D collVector = dir_;
+
 	// collVector es el vector perpendicular del objeto contra el que choca
-	if (game_->collides(ballRect, vel_, collVector))
+	if (game_->collides(ballRect, dir_, collVector))
 	{
-		collVector.normalize();
 		// Aplicamos la reflexion
-		vel_ = vel_ - collVector * (2 * (vel_*collVector));
-		pos_ = prevPos + vel_;
+		dir_ = collVector;
+		// dir_ = dir_ - collVector * (2 * (dir_*collVector));
 	}
+
+	vel_ = dir_ * speed_;
+	// Movemos la bola
+	pos_ = pos_ + vel_;
 }

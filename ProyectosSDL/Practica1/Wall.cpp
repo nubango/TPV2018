@@ -1,9 +1,8 @@
 #include "Wall.h"
 
-Wall::Wall(Vector2D pos, uint width, uint height, Texture * texture) :
-	pos_(pos), width_(width), height_(height), texture_(texture)
+Wall::Wall(Vector2D pos, uint width, uint height, Vector2D normal, Texture * texture) :
+	pos_(pos), width_(width), height_(height), normal_(normal), texture_(texture)
 {
-	perpendicular_ = { pos_.getY(), -pos_.getX() };
 }
 
 void Wall::render() const
@@ -12,8 +11,18 @@ void Wall::render() const
 	texture_->render(destRect);
 }
 
-bool Wall::collides(Vector2D & collVector)
+bool Wall::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
-	collVector = perpendicular_;
-	return true;
+	// SDL_HasIntersection comprueba si hay colision entre dos SDL_Rects
+	if (SDL_HasIntersection(&rect, &getDestRect()))
+	{
+		// Pared superior
+		if (normal_.getX() == 0 && normal_.getY() == 1)
+			collVector = Vector2D(vel.getX(), -vel.getY());
+		// Pared derecha e izquierda
+		else if (normal_.getX() == 1, normal_.getY() == 0)
+			collVector = Vector2D(-vel.getX(), vel.getY());
+		return true;
+	}
+	return false;
 }

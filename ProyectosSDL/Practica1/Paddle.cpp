@@ -34,9 +34,34 @@ void Paddle::handleEvents(SDL_Event & event)
 		vel_.setX(0);
 }
 
-bool Paddle::collides(Vector2D & collVector)
+bool Paddle::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
-	// collVector contra el paddle es distinto, depende de la zona donde colisione
-	collVector = { pos_.getY(), -pos_.getX() };
+	// SDL_HasIntersection comprueba si hay colision entre dos SDL_Rects
+	// DestRect es la propia pala
+	if (SDL_HasIntersection(&rect, &getDestRect()))
+	{
+		double midPoint = getDestRect().x + getDestRect().w / 2;
+		// Si colisiona por el lado izquierdo
+		if (rect.x < midPoint)
+		{
+			// Si viene del lado opuesto
+			if (vel.getX() == -1)
+				collVector = Vector2D(vel.getX(), -vel.getY());
+			// Si viene del mismo lado
+			else
+				collVector = Vector2D(-vel.getX(), -vel.getY());
+		}
+		// Si colisiona por el lado derecho
+		else
+		{
+			// Si viene del lado opuesto
+			if (vel.getX() == -1)
+				collVector = Vector2D(-vel.getX(), -vel.getY());
+			// Si viene del mismo lado
+			else
+				collVector = Vector2D(vel.getX(), -vel.getY());
+		}
+		return true;
+	}
 	return false;
 }

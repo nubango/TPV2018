@@ -16,6 +16,9 @@ private:
 
 	double velocity = 10;
 
+	// Devuelve el SDL_Rect de la pala
+	SDL_Rect getDestRect() { return { (int)pos_.getX(), (int)pos_.getY(), (int)width_, (int)height_ }; }
+
 public:
 	Paddle(Vector2D pos, uint width, uint height, Texture* texture);
 	~Paddle() {}
@@ -27,5 +30,5 @@ public:
 	// Trata los eventos de teclado
 	void handleEvents(SDL_Event & event);
 	// Determina el vector de colision con la pelota
-	bool collides(Vector2D & collVector);
+	bool collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector);
 };

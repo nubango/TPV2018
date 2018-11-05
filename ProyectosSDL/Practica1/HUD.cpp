@@ -20,13 +20,15 @@ void HUD::render()
 
 	// Renderizamos las vidas
 	// Dependiendo del numero de vidas iniciales se divide el espacio del HUD
+	uint margen = 10;
 	// Se actualiza añ perder vidas con game_->getLives()
 	int numLives = game_->getLives();
 	for (int i = 0; i < game_->getLives(); i++) {
-		SDL_Rect destRect = { pos_.getX() + (i * (WIN_WIDTH_PLUS_HUD - WIN_WIDTH) / numLives),
-			pos_.getY() + LOGO_HEIGHT + 10,
-			(WIN_WIDTH_PLUS_HUD - WIN_WIDTH) / numLives,
-			PADDLE_HEIGHT };
+		SDL_Rect destRect = { 
+			pos_.getX() + (i * (WIN_WIDTH_PLUS_HUD - WIN_WIDTH) / numLives) + (margen/2), // X
+			pos_.getY() + LOGO_HEIGHT + margen,                                           // Y
+			((WIN_WIDTH_PLUS_HUD - WIN_WIDTH) / numLives) - margen,                       // W
+			PADDLE_HEIGHT };                                                              // H
 		livesTexture_->render(destRect);
 	}
 

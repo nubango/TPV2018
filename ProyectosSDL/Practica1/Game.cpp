@@ -19,9 +19,9 @@ Game::Game()
 	// Se crean los objetos de la escena
 	ball_ = new Ball({ WIN_WIDTH / 2,WIN_HEIGHT - 30 }, BALL_SIZE, BALL_SIZE, textures_[BallTex], this);
 	paddle_ = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, PADDLE_WIDTH, PADDLE_HEIGHT, textures_[PaddleTex]);
-	sidewallleft_ = new Wall({ 0,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
-	sidewallright_ = new Wall({ WIN_WIDTH - WALL_WIDTH,0 }, WALL_WIDTH, WIN_HEIGHT, textures_[SideWallTex]);
-	topwall_ = new Wall({ 0,0 }, WIN_WIDTH, WALL_WIDTH, textures_[TopWallTex]);
+	sidewallleft_ = new Wall({ 0,0 }, WALL_WIDTH, WIN_HEIGHT, { 1,0 }, textures_[SideWallTex]);
+	sidewallright_ = new Wall({ WIN_WIDTH - WALL_WIDTH,0 }, WALL_WIDTH, WIN_HEIGHT, { -1,0 }, textures_[SideWallTex]);
+	topwall_ = new Wall({ 0,0 }, WIN_WIDTH, WALL_WIDTH, { 0,1 }, textures_[TopWallTex]);
 	blocksmap_ = new BlocksMap(WIN_HEIGHT / 2, WIN_WIDTH, this);
 	blocksmap_->load(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
 	hud_ = new HUD({ WIN_WIDTH_PLUS_HUD - (WIN_WIDTH_PLUS_HUD - WIN_WIDTH), 0 }, WIN_WIDTH_PLUS_HUD - WIN_WIDTH, WIN_HEIGHT, textures_[PaddleTex], textures_[LogoTex], textures_[NumbersTex], this);
@@ -69,18 +69,11 @@ void Game::render()
 	topwall_->render();
 	sidewallleft_->render();
 	sidewallright_->render();
-	ball_->render();
 	paddle_->render();
 	blocksmap_->render();
+	ball_->render();
 	hud_->render();
 	SDL_RenderPresent(renderer_);
-
-	// DEBUG POR CONSOLA
-	system("cls");
-	cout << "Lives: " << numLives_ << endl;
-	cout << "Level " << numLevel_ << endl;
-	cout << "Ball position: { " << ball_->getPos().getX() << " , " << ball_->getPos().getY() << " }" << endl;
-	cout << "Ball direction: { " << ball_->getVel().getX() << " , " << ball_->getVel().getY() << " }" << endl;
 }
 
 void Game::update()
@@ -100,6 +93,12 @@ void Game::handleEvents()
 		{
 			if (event.key.keysym.sym == SDLK_ESCAPE)
 				exit_ = true;
+
+			// ------------- DEBUG --------------- //
+			if (event.key.keysym.sym == SDLK_1)
+				win_ = true;
+			if (event.key.keysym.sym == SDLK_2)
+				gameover_ = true;
 		}
 		paddle_->handleEvents(event);
 	}
@@ -107,26 +106,30 @@ void Game::handleEvents()
 
 bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
-	// Si la componente Y de la bola esta en el espacio del mapa de bloques
-	if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
-	{
-		Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(), collVector);
-		if (block != nullptr)
-		{
-			blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
-			if (blocksmap_->getNumBlocks() == 0)
-				win_ = true;
-		}
-		return true;
-	}
+	//// Si la componente Y de la bola esta en el espacio del mapa de bloques
+	//if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
+	//{
+	//	Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(), collVector);
+	//	if (block != nullptr)
+	//	{
+	//		blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+	//		if (blocksmap_->getNumBlocks() == 0)
+	//			win_ = true;
+	//	}
+	//	return true;
+	//}
 
 	// Muros
-	// if (SDL_HasIntersection(&rect, &rect));
-	if (topwall_->collides(collVector) || sidewallright_->collides(collVector) || sidewallleft_->collides(collVector))
+	if (topwall_->collides(rect, vel, collVector))
+		return true;
+	if (sidewallright_->collides(rect, vel, collVector))
+		return true;
+	if (sidewallleft_->collides(rect, vel, collVector))
 		return true;
 
 	// Paddle
-	// if (SDL_HasIntersection(&rect, &rect));
-	if (paddle_->collides(collVector))
+	if (paddle_->collides(rect, vel, collVector))
 		return true;
+
+	return false;
 }
