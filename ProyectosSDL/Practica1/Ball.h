@@ -11,7 +11,7 @@ class Ball
 private:
 	int speed_ = 5;
 	Vector2D pos_ = Vector2D(0, 0),
-		dir_ = Vector2D(-1, -1),
+		dir_ = Vector2D(1, -1),
 		vel_ = Vector2D(1, 1);
 	uint width_ = 0,
 		height_ = 0;

@@ -54,12 +54,26 @@ void Game::run()
 {
 	while (!exit_)
 	{
-		uint startTime = SDL_GetTicks();
-		handleEvents();
-		update();
-		render();
-		uint frameTime = SDL_GetTicks() - startTime;
-		if (frameTime < FRAME_RATE) SDL_Delay(FRAME_RATE - frameTime);
+		//while (!win_ && !gameover_) 
+		//{
+			uint startTime = SDL_GetTicks();
+			handleEvents();
+			update();
+			render();
+			uint frameTime = SDL_GetTicks() - startTime;
+			if (frameTime < FRAME_RATE) SDL_Delay(FRAME_RATE - frameTime);
+		//}
+
+		//if (win_)
+		//{
+		//	numLevel_++;
+		//	blocksmap_->load(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION);
+		//	win_ = false;
+		//}
+		//else if (gameover_)
+		//{
+		//	cout << "LOSER";
+		//}
 	}
 }
 
@@ -106,18 +120,18 @@ void Game::handleEvents()
 
 bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
-	//// Si la componente Y de la bola esta en el espacio del mapa de bloques
-	//if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
-	//{
-	//	Block* block = blocksmap_->collides(ball_->getDestRect(), ball_->getVel(), collVector);
-	//	if (block != nullptr)
-	//	{
-	//		blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
-	//		if (blocksmap_->getNumBlocks() == 0)
-	//			win_ = true;
-	//	}
-	//	return true;
-	//}
+	// Si la componente Y de la bola esta en el espacio del mapa de bloques
+	if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
+	{
+		Block* block = blocksmap_->collides(ball_->getDestRect(), vel, collVector);
+		if (block != nullptr)
+		{
+			blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+			if (blocksmap_->getNumBlocks() == 0)
+				win_ = true;
+			return true;
+		}
+	}
 
 	// Muros
 	if (topwall_->collides(rect, vel, collVector))

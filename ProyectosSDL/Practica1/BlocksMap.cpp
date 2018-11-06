@@ -26,7 +26,7 @@ BlocksMap::~BlocksMap()
 
 uint BlocksMap::getBottomLimit()
 {
-	return (WIN_HEIGHT / 2) - WALL_WIDTH;
+	return (WIN_HEIGHT - (height_ + WALL_WIDTH));
 }
 
 void BlocksMap::load(string const& filename)
@@ -134,16 +134,13 @@ Block * BlocksMap::collides(const SDL_Rect& ballRect, const Vector2D& ballVel, V
 
 Block * BlocksMap::blockAt(const Vector2D & pos)
 {
-	// Conseguimos el ancho o alto de cada bloque y dividimos pos entre ese valor
-	int nRow = (int)pos.getX() / (width_ / rows_);
-	int nCol = (int)pos.getY() / (height_ / cols_);
+	// Conseguimos el ancho o alto de cada bloque y dividimos entre ese valor
+	int nCol = (int)pos.getX() / (width_ / cols_);
+	int nRow = (int)pos.getY() / (height_ / rows_);
 
-	// En caso de no haber bloque en ese punto devuelve nullptr
-	// (incluido el caso de que p esté fuera del espacio del mapa) 
-	if (nRow > (getBottomLimit() / (width_ / rows_)))
+	// Devuelve nullptr si esta fuera del espacio del mapa
+	if (nRow > rows_)
 		return nullptr;
-	if (nCol < 0 && nCol > WIN_WIDTH)
-		return nullptr;
-	else
+	else // Devuelve nullptr si no hay bloque o el bloque si existe
 		return blocks_[nRow][nCol];
 }
