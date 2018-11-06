@@ -22,6 +22,7 @@ public:
 
 	void setWidth(uint width) { width_ = width; }
 	void setHeight(uint height) { height_ = height; }
+	void setColor(uint color) { color_ = color; }
 
 	double getX() { return pos_.getX(); }
 	double getY() { return pos_.getY(); }

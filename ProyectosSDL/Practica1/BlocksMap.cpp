@@ -134,13 +134,16 @@ Block * BlocksMap::collides(const SDL_Rect& ballRect, const Vector2D& ballVel, V
 
 Block * BlocksMap::blockAt(const Vector2D & pos)
 {
+	double blocksWidth = width_ / cols_,
+		blocksHeight = height_ / rows_;
 	// Conseguimos el ancho o alto de cada bloque y dividimos entre ese valor
-	int nCol = (int)pos.getX() / (width_ / cols_);
-	int nRow = (int)pos.getY() / (height_ / rows_);
+	int nCol = trunc((pos.getX() - WALL_WIDTH) / blocksWidth);
+	int nRow = trunc((pos.getY() - WALL_WIDTH) / blocksHeight);
 
 	// Devuelve nullptr si esta fuera del espacio del mapa
-	if (nRow > rows_)
+	if (nRow > rows_ - 1)
 		return nullptr;
+
 	else // Devuelve nullptr si no hay bloque o el bloque si existe
 		return blocks_[nRow][nCol];
 }

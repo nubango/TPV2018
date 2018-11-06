@@ -121,17 +121,18 @@ void Game::handleEvents()
 bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
 	// Si la componente Y de la bola esta en el espacio del mapa de bloques
-	if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
-	{
+	//if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
+	//{
 		Block* block = blocksmap_->collides(ball_->getDestRect(), vel, collVector);
 		if (block != nullptr)
 		{
-			blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+			block->setColor(5);
+			// blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
 			if (blocksmap_->getNumBlocks() == 0)
 				win_ = true;
 			return true;
 		}
-	}
+	//}
 
 	// Muros
 	if (topwall_->collides(rect, vel, collVector))

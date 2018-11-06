@@ -16,12 +16,7 @@ bool Wall::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVe
 	// SDL_HasIntersection comprueba si hay colision entre dos SDL_Rects
 	if (SDL_HasIntersection(&rect, &getDestRect()))
 	{
-		// Pared superior
-		if (normal_.getX() == 0 && normal_.getY() == 1)
-			collVector = Vector2D(vel.getX(), -vel.getY());
-		// Pared derecha e izquierda
-		else if (normal_.getX() == 1, normal_.getY() == 0)
-			collVector = Vector2D(-vel.getX(), vel.getY());
+		collVector = normal_;
 		return true;
 	}
 	return false;
