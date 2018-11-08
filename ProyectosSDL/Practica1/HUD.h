@@ -1,4 +1,5 @@
 #pragma once
+#include "checkML.h"
 #include "Vector2D.h"
 #include "Texture.h"
 #include "Timer.h"
@@ -18,10 +19,13 @@ private:
 	Texture* timerTexture_ = nullptr;
 	Game* game_ = nullptr;
 	Timer* timer_ = nullptr;
+	int numLives_ = 0;
 
 public:
 	HUD(Vector2D pos, uint width, uint height, Texture * livesTexture, Texture* logoTexture, Texture* timerTexture, Game * game);
 	~HUD();
+
+	Timer* getTimer() { return timer_; }
 
 	// Dibuja en pantalla el estado actual del HUD
 	void render();

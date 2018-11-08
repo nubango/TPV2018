@@ -4,6 +4,8 @@
 Block::Block(uint color, uint row, uint col, Texture * texture) :
 	color_(color), row_(row), col_(col), texture_(texture)
 {
+	pos_.setX(col);
+	pos_.setY(row);
 }
 
 void Block::render()

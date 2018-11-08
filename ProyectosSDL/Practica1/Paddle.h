@@ -1,4 +1,5 @@
 #pragma once
+#include "checkML.h"
 #include "Vector2D.h"
 #include "Texture.h"
 
@@ -8,13 +9,14 @@ class Paddle
 {
 private:
 	Vector2D pos_ = Vector2D(0, 0),
-		vel_ = Vector2D(velocity, 0);
+		dir_ = Vector2D(0, 0),
+		vel_ = Vector2D(0, 0);
 	uint width_ = 0,
 		height_ = 0;
 
 	Texture* texture_ = nullptr;
 
-	double velocity = 10;
+	double speed_ = 0;
 
 	// Devuelve el SDL_Rect de la pala
 	SDL_Rect getDestRect() { return { (int)pos_.getX(), (int)pos_.getY(), (int)width_, (int)height_ }; }

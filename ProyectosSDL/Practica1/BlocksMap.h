@@ -1,4 +1,5 @@
 #pragma once
+#include "checkML.h"
 #include "Block.h"
 #include <fstream>
 
@@ -27,7 +28,7 @@ public:
 	uint getBottomLimit();
 
 	// Destruye el bloque (se llama desde Game cuando la bola colisione)
-	void hitBlock(Block* block) { block = nullptr; }
+	void hitBlock(Block* block);
 
 	// Carga de fichero el mapa
 	void load(string const& filename);

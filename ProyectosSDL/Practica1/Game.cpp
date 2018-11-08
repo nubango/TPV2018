@@ -52,28 +52,32 @@ Game::~Game()
 
 void Game::run()
 {
-	while (!exit_)
+	while (!exit_ && !win_ && !gameover_)
 	{
-		//while (!win_ && !gameover_) 
-		//{
+		while (!win_ && !gameover_)
+		{
 			uint startTime = SDL_GetTicks();
 			handleEvents();
 			update();
 			render();
 			uint frameTime = SDL_GetTicks() - startTime;
 			if (frameTime < FRAME_RATE) SDL_Delay(FRAME_RATE - frameTime);
-		//}
+		}
 
-		//if (win_)
-		//{
-		//	numLevel_++;
-		//	blocksmap_->load(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION);
-		//	win_ = false;
-		//}
-		//else if (gameover_)
-		//{
-		//	cout << "LOSER";
-		//}
+		if (win_)
+		{
+			// Si ganas te carga el siguiente nivel
+			cout << "YOU WIN LEVEL " << numLevel_ << endl;
+			numLevel_++;
+			blocksmap_->load(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION);
+			ball_->reset();
+			win_ = false;
+		}
+		else if (gameover_)
+		{
+			exit_ = true;
+			cout << "YOU LOSE ALL YOUR LIVES";
+		}
 	}
 }
 
@@ -92,8 +96,17 @@ void Game::render()
 
 void Game::update()
 {
-	ball_->update();
 	paddle_->update();
+	if (!ball_->isOutOfBounds())
+		ball_->update();
+	else
+	{
+		if (numLives_ > 0)
+			numLives_--;
+		if(numLives_ == 0)
+			gameover_ = true;
+		ball_->reset();
+	}
 }
 
 void Game::handleEvents()
@@ -113,6 +126,8 @@ void Game::handleEvents()
 				win_ = true;
 			if (event.key.keysym.sym == SDLK_2)
 				gameover_ = true;
+			if (event.key.keysym.sym == SDLK_3)
+				numLives_--;
 		}
 		paddle_->handleEvents(event);
 	}
@@ -121,18 +136,17 @@ void Game::handleEvents()
 bool Game::collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector)
 {
 	// Si la componente Y de la bola esta en el espacio del mapa de bloques
-	//if (ball_->getPos().getY() < blocksmap_->getBottomLimit())
-	//{
+	if (ball_->getPos().getY() < blocksmap_->getBottomLimit() + 50)
+	{
 		Block* block = blocksmap_->collides(ball_->getDestRect(), vel, collVector);
 		if (block != nullptr)
 		{
-			block->setColor(5);
-			// blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+			blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
 			if (blocksmap_->getNumBlocks() == 0)
 				win_ = true;
 			return true;
 		}
-	//}
+	}
 
 	// Muros
 	if (topwall_->collides(rect, vel, collVector))

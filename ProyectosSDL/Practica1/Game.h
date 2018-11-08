@@ -1,4 +1,5 @@
 #pragma once
+#include "checkML.h"
 #include "Vector2D.h"
 #include "Ball.h"
 #include "BlocksMap.h"
@@ -12,10 +13,10 @@ const uint WIN_WIDTH_PLUS_HUD = 1000;
 const uint WIN_WIDTH = 800;
 const uint WIN_HEIGHT = 600;
 const uint NUM_TEXTURES = 7;
-const uint FRAME_RATE = 60;
+const uint FRAME_RATE = 10;
 const uint WALL_WIDTH = 20;
 const uint PADDLE_WIDTH = 100;
-const uint PADDLE_HEIGHT = 10;
+const uint PADDLE_HEIGHT = 15;
 const uint BALL_SIZE = 10;
 const uint LOGO_HEIGHT = 60;
 const string IMAGE_PATH = "..\\sprites\\";
@@ -67,6 +68,7 @@ private:
 	// Variable para el numero de nivel
 	int numLevel_ = 1;
 
+	//variable para la cantidad de vidas
 	int numLives_ = 3;
 
 	// Array de punteros a las texturas del juego

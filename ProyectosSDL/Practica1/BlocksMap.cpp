@@ -29,6 +29,21 @@ uint BlocksMap::getBottomLimit()
 	return (WIN_HEIGHT - (height_ + WALL_WIDTH));
 }
 
+void BlocksMap::hitBlock(Block* block)
+{
+	int i = block->getY();
+	int j = block->getX();
+
+	if (blocks_[i][j] != nullptr)
+	{
+		blocks_[i][j] = nullptr;
+		delete block;
+
+		if (numBlocks_ > 0)
+			numBlocks_--;
+	}
+}
+
 void BlocksMap::load(string const& filename)
 {
 	ifstream file;
@@ -76,10 +91,10 @@ void BlocksMap::render()
 
 Block * BlocksMap::collides(const SDL_Rect& ballRect, const Vector2D& ballVel, Vector2D & collVector)
 {
-	Vector2D p0 = { (double)ballRect.x, (double)ballRect.y }; // top-left
-	Vector2D p1 = { (double)ballRect.x + (double)ballRect.w, (double)ballRect.y }; // top-right
-	Vector2D p2 = { (double)ballRect.x, (double)ballRect.y + (double)ballRect.h }; // bottom-left
-	Vector2D p3 = { (double)ballRect.x + (double)ballRect.w, (double)ballRect.y + (double)ballRect.h }; // bottom-right
+	Vector2D p0 = Vector2D(ballRect.x, ballRect.y); // top-left
+	Vector2D p1 = Vector2D(ballRect.x + ballRect.w, ballRect.y); // top-right
+	Vector2D p2 = Vector2D(ballRect.x, ballRect.y + ballRect.h); // bottom-left
+	Vector2D p3 = Vector2D(ballRect.x + ballRect.w, ballRect.y + ballRect.h); // bottom-right
 	Block* b = nullptr;
 	if (ballVel.getX() < 0 && ballVel.getY() < 0) {
 		if ((b = blockAt(p0))) {
@@ -134,16 +149,20 @@ Block * BlocksMap::collides(const SDL_Rect& ballRect, const Vector2D& ballVel, V
 
 Block * BlocksMap::blockAt(const Vector2D & pos)
 {
-	double blocksWidth = width_ / cols_,
-		blocksHeight = height_ / rows_;
-	// Conseguimos el ancho o alto de cada bloque y dividimos entre ese valor
-	int nCol = trunc((pos.getX() - WALL_WIDTH) / blocksWidth);
-	int nRow = trunc((pos.getY() - WALL_WIDTH) / blocksHeight);
+	if (pos.getX() > WALL_WIDTH && pos.getX() < WIN_WIDTH - WALL_WIDTH &&
+		pos.getY() > WALL_WIDTH && pos.getY() < height_ + WALL_WIDTH)
+	{
+		// Dividimos la posicion relativa al blocksMap entre el ancho o alto del bloque
+		double bWidth = width_ / cols_,
+			bHeight = height_ / rows_;
 
-	// Devuelve nullptr si esta fuera del espacio del mapa
-	if (nRow > rows_ - 1)
-		return nullptr;
+		int nCol = trunc((pos.getX() - WALL_WIDTH) / bWidth);
+		int nRow = trunc((pos.getY() - WALL_WIDTH) / bHeight);
 
-	else // Devuelve nullptr si no hay bloque o el bloque si existe
+		// Devuelve nullptr si no hay bloque o el bloque si existe
 		return blocks_[nRow][nCol];
+	}
+	else
+		// Devuelve nullptr si esta fuera del espacio del mapa
+		return nullptr;
 }
