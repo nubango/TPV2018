@@ -16,7 +16,4 @@ public:
 
 	virtual void update();
 	virtual void handleEvent(SDL_Event & event);
-
-	virtual void loadFromFile(string const& filename);
-	virtual void saveToFile();
 };

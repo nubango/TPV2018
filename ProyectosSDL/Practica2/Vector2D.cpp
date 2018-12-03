@@ -42,6 +42,6 @@ double Vector2D::operator*(const Vector2D & d) const
 
 std::ostream & operator<<(std::ostream & os, const Vector2D & v)
 {
-	os << "(" << v.x_ << "," << v.y_ << ")";
+	os << '(' << v.x_ << ',' << v.y_ << ')';
 	return os;
 }

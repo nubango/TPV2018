@@ -15,10 +15,17 @@ MovingObject::~MovingObject()
 {
 }
 
-void MovingObject::loadFromFile(string const& filename)
+void MovingObject::loadFromFile(ifstream & file)
 {
+	double x, y;
+	file >> x >> y;
+	dir_.setXY(x, y);
+	file >> speed_;
+
+	// vel_ = dir_ * speed_;
 }
 
-void MovingObject::saveToFile()
+void MovingObject::saveToFile(ofstream& file)
 {
+	file << dir_ << speed_;
 }

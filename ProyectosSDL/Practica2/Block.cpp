@@ -28,6 +28,6 @@ void Block::render() const
 	else col = color_ % texture_->getNumCols();
 
 	// destRect = {x, y, w, h}
-	SDL_Rect destRect = { WALL_SIZE + col_ * width_, WALL_SIZE + row_ * height_, width_, height_ };
+	SDL_Rect destRect = { Game::WALL_SIZE + col_ * width_, Game::WALL_SIZE + row_ * height_, width_, height_ };
 	texture_->renderFrame(destRect, row, col);
 }

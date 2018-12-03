@@ -16,6 +16,11 @@ public:
 
 	virtual void render() const;
 
+	double getX() { return pos_.getX(); }
+	double getY() { return pos_.getY(); }
+	uint getW() { return width_; }
+	uint getH() { return height_; }
+
 	virtual void loadFromFile(string const& filename) {}
 	virtual void saveToFile() {}
 };

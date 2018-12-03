@@ -1,5 +1,9 @@
 #include "Game.h"
 
+const std::string Game::IMAGE_PATH = "..\\sprites\\";
+const std::string Game::LEVEL_PATH = "..\\levels\\level0";
+const std::string Game::LEVEL_EXTENSION = ".ark";
+
 Game::Game() : window_(nullptr), renderer_(nullptr), exit_(false), numLevel_(1)
 {
 	// Se inicializa SDL
@@ -17,13 +21,24 @@ Game::Game() : window_(nullptr), renderer_(nullptr), exit_(false), numLevel_(1)
 	}
 
 	// Se crean los objetos de la escena
-	objects_.push_back(new Wall({ 0,0 }, WALL_SIZE, WIN_HEIGHT, { 1,0 }, textures_[SideWallTex]));
-	objects_.push_back(new Wall({ WIN_WIDTH - WALL_SIZE,0 }, WALL_SIZE, WIN_HEIGHT, { -1,0 }, textures_[SideWallTex]));
-	objects_.push_back(new Wall({ 0,0 }, WIN_WIDTH, WALL_SIZE, { 0,1 }, textures_[TopWallTex]));
-	objects_.push_back(new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, { 0,0 }, 7, PADDLE_WIDTH, PADDLE_HEIGHT, textures_[PaddleTex]));
+	Wall* leftSideWall = new Wall({ 0,0 }, WALL_SIZE, WIN_HEIGHT, { 1,0 }, textures_[SideWallTex]);
+	Wall* rightSideWall = new Wall({ WIN_WIDTH - WALL_SIZE,0 }, WALL_SIZE, WIN_HEIGHT, { -1,0 }, textures_[SideWallTex]);
+	Wall* topWall = new Wall({ 0,0 }, WIN_WIDTH, WALL_SIZE, { 0,1 }, textures_[TopWallTex]);
+	Paddle * paddle = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, { 0,0 }, 7, PADDLE_WIDTH, PADDLE_HEIGHT, textures_[PaddleTex]);
+
+	objects_.push_back(leftSideWall);
+	objects_.push_back(rightSideWall);
+	objects_.push_back(topWall);
+	objects_.push_back(paddle);
+
 	objects_.push_back(new Ball({ WIN_WIDTH / 2,WIN_HEIGHT - 20 - PADDLE_HEIGHT }, { 0,0 }, 5, BALL_SIZE, BALL_SIZE, textures_[BallTex], this));
 	objects_.push_back(new BlocksMap({ double(WALL_SIZE),double(WALL_SIZE) }, WIN_WIDTH - (WALL_SIZE * 2), WIN_HEIGHT / 2, textures_[BricksTex]));
-	objects_.back()->loadFromFile(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
+	// objects_.back()->loadFromFile(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
+
+	collisionable_.push_back(leftSideWall);
+	collisionable_.push_back(rightSideWall);
+	collisionable_.push_back(topWall);
+	collisionable_.push_back(paddle);
 }
 
 Game::~Game()
@@ -72,6 +87,15 @@ void Game::update()
 {
 	for (ArkanoidObject* o : objects_)
 		o->update();
+
+	//for (auto it = objects_.begin(); it != objects_.end(); ++it)
+	//{
+	//	// (*(it++)->update());
+	//	auto next = it;
+	//	++next;
+	//	(*it)->update();
+	//	it = next;
+	//}
 }
 
 void Game::handleEvents()
@@ -94,5 +118,72 @@ void Game::handleEvents()
 
 bool Game::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & collVector)
 {
-	return false;
+	//// Si la componente Y de la bola esta en el espacio del mapa de bloques
+	//if (ball_->getPos().getY() < blocksmap_->getBottomLimit() + 50)
+	//{
+	//	Block* block = blocksmap_->collides(ball_->getDestRect(), vel, collVector);
+	//	if (block != nullptr)
+	//	{
+	//		blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+	//		if (blocksmap_->getNumBlocks() == 0)
+	//			win_ = true;
+	//		return true;
+	//	}
+	//}
+
+	// Block* block = objects_.back()->collidesMap(rect, vel, collVector);
+
+	// Muros y Paddle
+	for (ArkanoidObject* o : collisionable_)
+	{
+		if (o->collides(rect, vel, collVector))
+			return true;
+		else
+			return false;
+	}
+}
+
+void Game::loadGame(string const& filename)
+{
+	ifstream file;
+	file.open(filename);
+
+	if (!file.is_open())
+		throw ("Error: no se encuentra el fichero " + filename);
+	else
+	{
+		for (ArkanoidObject* o : objects_)
+			o->loadFromFile(file);
+	}
+
+	file.close();
+}
+
+void Game::saveGame(ofstream& file)
+{
+	// Version cutre: leer desde consola
+	// Version buena: leer desde SDL (capturar numeros con decenas, centenas, etc...)
+	// int code = readCode();
+	// Crear fichero con ese nombre
+	// ofstream file;
+	// Se escribe en el fichero:
+	// Se llama a saveToFile() de cada objeto
+	//for (auto o : objects_)
+	//	o->saveToFile(file);
+	// El ejercicio es que la escena se guarde exactamente igual, no como en un juego
+	// El bucle for va a dar fallos porque hay que saber donde acaban los objetos y donde comienzan los premios
+	// Por ejemplo, con un atributo para saber cual es el firstReward (un entero)
+	// for (int i = 0; i < firstReward; i++)
+	//	objects_[i]->saveToFile();
+	// Es mas facil con una class RewardsManager (paralelismo a BlocksMap) pero no es el "ejercicio"
+	// file.close();
+}
+
+void Game::killObject(list<ArkanoidObject>::iterator it)
+{
+	//if (it == firstReward_)
+	//	firstReward_++;
+	//delete *it; // borra el propio reward
+	//// eliminar de la lista el elemento
+	//objects_.erase(it);
 }

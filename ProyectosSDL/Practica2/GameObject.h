@@ -9,6 +9,7 @@ public:
 	GameObject();
 	virtual ~GameObject();
 
+	// Interfaz de objeto
 	virtual void render() const = 0;
 	virtual void update() = 0;
 	virtual void handleEvent(SDL_Event & event) = 0;

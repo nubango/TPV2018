@@ -22,9 +22,10 @@ public:
 	virtual void render() const;
 	virtual void update();
 	virtual void handleEvent(SDL_Event & event);
+	virtual bool collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector);
 
 	SDL_Rect getRect() const { return { (int)pos_.getX(), (int)pos_.getY(), (int)width_, (int)height_ }; }
 
-	virtual void loadFromFile(string const& filename) = 0;
-	virtual void saveToFile() = 0;
+	virtual void loadFromFile(ifstream& file);
+	virtual void saveToFile(ofstream& file);
 };

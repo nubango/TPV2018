@@ -18,6 +18,9 @@ public:
 
 	virtual void render() const;
 
-	virtual void loadFromFile(string const& filename);
-	virtual void saveToFile();
+	Block* collidesMap(const SDL_Rect& ballRect, const Vector2D& ballVel, Vector2D & collVector);
+	Block* blockAt(const Vector2D& pos);
+
+	virtual void loadFromFile(ifstream& file);
+	virtual void saveToFile(ofstream& file);
 };

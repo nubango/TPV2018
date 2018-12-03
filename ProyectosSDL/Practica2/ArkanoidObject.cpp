@@ -21,8 +21,30 @@ void ArkanoidObject::render() const
 
 void ArkanoidObject::update()
 {
+	// Por defecto no hacen nada (sirve para los bucles de los updates de todos los objetos)
 }
 
 void ArkanoidObject::handleEvent(SDL_Event & event)
 {
+	// Por defecto no hacen nada (sirve para los bucles de los updates de todos los objetos)
+}
+
+bool ArkanoidObject::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & collVector)
+{
+	return false;
+}
+
+void ArkanoidObject::loadFromFile(ifstream & file)
+{
+	// file >> pos_ >> width_ >> height_;
+
+	double x, y;
+	file >> x >> y;
+	pos_.setXY(x, y);
+	file >> width_ >> height_;
+}
+
+void ArkanoidObject::saveToFile(ofstream & file)
+{
+	file << pos_ << width_ << height_;
 }

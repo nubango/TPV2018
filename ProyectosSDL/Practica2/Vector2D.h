@@ -18,6 +18,7 @@ public:
 	double getY() const { return y_; }
 
 	// Sets
+	void setXY(double x, double y) { x_ = x; y_ = y; }
 	void setX(double x) { x_ = x; }
 	void setY(double y) { y_ = y; }
 

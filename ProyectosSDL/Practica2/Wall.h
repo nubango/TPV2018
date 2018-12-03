@@ -12,6 +12,7 @@ public:
 	Wall(Vector2D pos, uint width, uint height, Vector2D normal, Texture* texture);
 	virtual ~Wall();
 
-	virtual void loadFromFile(string const& filename) {}
-	virtual void saveToFile() {}
+	virtual bool collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector);
+	virtual void loadFromFile(ifstream& file);
+	virtual void saveToFile(ofstream& file);
 };
