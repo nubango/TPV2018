@@ -1,11 +1,11 @@
 #include "ArkanoidObject.h"
 
-ArkanoidObject::ArkanoidObject() : 
-	GameObject(), pos_(0, 0), width_(0), height_(0)
+ArkanoidObject::ArkanoidObject() :
+	GameObject(), pos_(0, 0), width_(0), height_(0), texture_(nullptr)
 {
 }
 
-ArkanoidObject::ArkanoidObject(Vector2D pos, uint width, uint height, Texture * texture) : 
+ArkanoidObject::ArkanoidObject(Vector2D pos, double width, double height, Texture * texture) :
 	GameObject(), pos_(pos), width_(width), height_(height), texture_(texture)
 {
 }
@@ -31,7 +31,8 @@ void ArkanoidObject::handleEvent(SDL_Event & event)
 
 bool ArkanoidObject::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & collVector)
 {
-	return false;
+	// SDL_HasIntersection comprueba si hay colision entre dos SDL_Rects
+	return SDL_HasIntersection(&getRect(), &rect);
 }
 
 void ArkanoidObject::loadFromFile(ifstream & file)
@@ -46,5 +47,5 @@ void ArkanoidObject::loadFromFile(ifstream & file)
 
 void ArkanoidObject::saveToFile(ofstream & file)
 {
-	file << pos_ << width_ << height_;
+	file << pos_ << " " << width_ << " " << height_;
 }

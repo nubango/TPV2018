@@ -9,9 +9,11 @@ class Ball :
 protected:
 	Game* game_;
 
+	Vector2D collVector_;
+
 public:
 	Ball();
-	Ball(Vector2D pos, Vector2D dir, double speed, uint width, uint height, Texture * texture, Game* game);
+	Ball(Vector2D pos, Vector2D dir, double speed, double width, double height, Texture * texture, Game* game);
 	virtual ~Ball();
 
 	virtual void update();

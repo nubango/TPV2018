@@ -12,15 +12,10 @@ protected:
 public:
 	Block();
 	Block(Vector2D pos, uint width, uint height, uint color, uint row, uint col, Texture* texture);
-	virtual ~Block();
+	virtual ~Block() {};
 
 	virtual void render() const;
 
-	double getX() { return pos_.getX(); }
-	double getY() { return pos_.getY(); }
-	uint getW() { return width_; }
-	uint getH() { return height_; }
-
-	virtual void loadFromFile(string const& filename) {}
-	virtual void saveToFile() {}
+	uint getRow() { return row_; }
+	uint getCol() { return col_; }
 };

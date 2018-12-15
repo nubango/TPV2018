@@ -6,8 +6,8 @@
 class GameObject
 {
 public:
-	GameObject();
-	virtual ~GameObject();
+	GameObject() {};
+	virtual ~GameObject() {};
 
 	// Interfaz de objeto
 	virtual void render() const = 0;

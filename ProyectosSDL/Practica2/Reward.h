@@ -6,17 +6,19 @@
 class Reward :
 	public MovingObject
 {
-private:
+protected:
 	Game* game_;
-	list<ArkanoidObject>::iterator itList;
+	list<ArkanoidObject>::iterator itList_;
 
 public:
 	Reward();
-	virtual ~Reward();
+	Reward(Vector2D pos, Vector2D dir, double speed, double width, double height, Texture * texture, Game * game);
+	virtual ~Reward() {};
+
+	virtual void setIterator(const list<ArkanoidObject>::iterator &it){ itList_ = it; }
 
 	virtual void render();
 	virtual void update();
-	virtual void handleEvent(SDL_Event & event);
 	
 	virtual void action() = 0;
 
@@ -31,7 +33,7 @@ class RedReward :
 {
 public:
 	RedReward();
-	virtual ~RedReward();
+	virtual ~RedReward() {};
 
 	virtual void action();
 };
@@ -43,7 +45,7 @@ class BlackReward :
 {
 public:
 	BlackReward();
-	virtual ~BlackReward();
+	virtual ~BlackReward() {};
 
 	virtual void action();
 };
@@ -55,7 +57,7 @@ class BlueReward :
 {
 public:
 	BlueReward();
-	virtual ~BlueReward();
+	virtual ~BlueReward() {};
 
 	virtual void action();
 };
@@ -67,7 +69,7 @@ class OrangeReward :
 {
 public:
 	OrangeReward();
-	virtual ~OrangeReward();
+	virtual ~OrangeReward() {};
 
 	virtual void action();
 };

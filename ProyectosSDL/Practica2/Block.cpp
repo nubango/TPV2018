@@ -1,17 +1,13 @@
 #include "Block.h"
 #include "Game.h"
 
-Block::Block() : 
+Block::Block() :
 	ArkanoidObject(), color_(0), row_(0), col_(0)
 {
 }
 
 Block::Block(Vector2D pos, uint width, uint height, uint color, uint row, uint col, Texture * texture) :
 	ArkanoidObject(pos, width, height, texture), color_(color), row_(row), col_(col)
-{
-}
-
-Block::~Block()
 {
 }
 

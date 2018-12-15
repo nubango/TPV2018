@@ -6,16 +6,17 @@
 #include "Ball.h"
 #include "Wall.h"
 #include "BlocksMap.h"
+#include "MenuButton.h"
 #include <list>
 #include <SDL_ttf.h>
 
 typedef unsigned int uint;
 
 // Indices para el array de texturas
-enum TextureName { BallTex, BricksTex, PaddleTex, SideWallTex, TopWallTex, LogoTex, NumbersTex };
+enum TextureName { BallTex, BricksTex, PaddleTex, SideWallTex, TopWallTex, LogoTex, NumbersTex, NewGameTex, LoadGameTex };
 
 // Struct con los atributos de la textura: path, filas y columnas
-struct TextureAttributes 
+struct TextureAttributes
 {
 	std::string filename;
 	uint rows;
@@ -28,7 +29,7 @@ public:
 	static const uint WIN_WIDTH = 800;
 	static const uint WIN_WIDTH_PLUS_HUD = WIN_WIDTH + 200;
 	static const uint WIN_HEIGHT = 600;
-	static const uint NUM_TEXTURES = 7;
+	static const uint NUM_TEXTURES = 9;
 	static const uint FRAME_RATE = 30; // A menor tiempo de espera entre frames, mayor la velocidad del bucle
 
 	static const uint WALL_SIZE = 20;
@@ -50,7 +51,9 @@ private:
 	{"side.png",1,1},
 	{"topside.png",1,1},
 	{"logo.png",1,1},
-	{"numbers.png",1,10}
+	{"numbers.png",1,10},
+	{"newGameButton.png",1,1},
+	{"loadGameButton.png",1,1}
 	};
 
 	// Array de punteros a las texturas del juego
@@ -64,16 +67,24 @@ private:
 	list <ArkanoidObject*> objects_;
 	// Lista de objetos colisionables
 	list <ArkanoidObject*> collisionable_;
+	// Lista de objetos del menu
+	list <ArkanoidObject*> menuObjects_;
 
 	// Iterador al primer Reward
 	list<ArkanoidObject>::iterator firstReward_;
 
 	// Booleanos de control de juego
 	bool exit_;
+	bool loaded_;
+	bool win_;
+	bool menu_;
 
 	// Variables del juego
 	uint numLevel_;
 	uint numLives_;
+	uint numPoints_;
+
+	uint code_;
 
 public:
 	Game();
@@ -87,11 +98,19 @@ public:
 	void update();
 	void handleEvents();
 
+	void menuLoaded();
+
 	// Determina si la pelota colisiona con algun objeto y devuelve el vector de colision	
 	bool collides(const SDL_Rect& rect, const Vector2D & vel, Vector2D& collVector);
-
 	void loadGame(string const& filename);
-	void saveGame(ofstream& file);
+	void saveGame();
 
 	void killObject(list<ArkanoidObject>::iterator it);
+	bool isOutOfWindow(double posY) { return (posY > WIN_HEIGHT); }
+	bool isCollidingPaddle(const SDL_Rect& rect);
+
+	void nextLevel();
+	void addLive();
+	void biggerPaddle();
+	void smallerPaddle();
 };

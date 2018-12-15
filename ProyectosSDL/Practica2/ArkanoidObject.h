@@ -9,15 +9,23 @@ class ArkanoidObject :
 {
 protected:
 	Vector2D pos_;
-	uint width_,
+	double width_,
 		height_;
 
-	Texture* texture_ = nullptr;
+	Texture* texture_;
 
 public:
 	ArkanoidObject();
-	ArkanoidObject(Vector2D pos, uint width, uint height, Texture* texture);
+	ArkanoidObject(Vector2D pos, double width, double height, Texture* texture);
 	virtual ~ArkanoidObject();
+
+	Vector2D getPosition() { return pos_; }
+	double getX() { return pos_.getX(); }
+	double getY() { return pos_.getY(); }
+	double getW() { return width_; }
+	double getH() { return height_; }
+
+	void setW(double w) { width_ = w; }
 
 	virtual void render() const;
 	virtual void update();

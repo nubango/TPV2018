@@ -1,12 +1,12 @@
 #include "Paddle.h"
 #include "Game.h"
 
-Paddle::Paddle() : 
+Paddle::Paddle() :
 	MovingObject()
 {
 }
 
-Paddle::Paddle(Vector2D pos, Vector2D dir, double speed, uint width, uint height, Texture * texture) : 
+Paddle::Paddle(Vector2D pos, Vector2D dir, double speed, double width, double height, Texture * texture) :
 	MovingObject(pos, dir, speed, width, height, texture)
 {
 }
@@ -17,11 +17,12 @@ Paddle::~Paddle()
 
 void Paddle::update()
 {
-	Vector2D nextPos;
-	nextPos = pos_ + vel_;
-	// Solo se mueve si la siguiente posicion es valida
-	if (nextPos.getX() > Game::WALL_SIZE && nextPos.getX() < Game::WIN_WIDTH - Game::WALL_SIZE - width_)
-		pos_ = nextPos;
+	MovingObject::update();
+	// Si la posicion no es valida lo devuelve a una posicion que si lo es
+	if (pos_.getX() <= Game::WALL_SIZE)
+		pos_.setX(Game::WALL_SIZE);
+	else if (pos_.getX() >= Game::WIN_WIDTH - Game::WALL_SIZE - width_)
+		pos_.setX(Game::WIN_WIDTH - Game::WALL_SIZE - width_);
 }
 
 void Paddle::handleEvent(SDL_Event & event)
@@ -29,19 +30,19 @@ void Paddle::handleEvent(SDL_Event & event)
 	if (event.type == SDL_KEYDOWN)
 	{
 		if (event.key.keysym.sym == SDLK_RIGHT)
-			vel_.setX(speed_);
+			dir_.setX(1);
 		if (event.key.keysym.sym == SDLK_LEFT)
-			vel_.setX(-speed_);
+			dir_.setX(-1);
 	}
 	if (event.type == SDL_KEYUP)
-		vel_.setX(0);
+		dir_.setX(0);
 }
 
 bool Paddle::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & collVector)
 {
 	// SDL_HasIntersection comprueba si hay colision entre dos SDL_Rects
 	// DestRect es la propia pala
-	if (SDL_HasIntersection(&rect, &getRect()))
+	if (ArkanoidObject::collides(rect, vel, collVector))
 	{
 		//double coefX = ((rect.x - pos_.getX()) / (width_ - rect.w))
 		//	- (1 - (rect.x - pos_.getX()) / (width_ - rect.w));
@@ -81,12 +82,4 @@ bool Paddle::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & co
 		// return true;
 	}
 	return false;
-}
-
-void Paddle::loadFromFile(ifstream & file)
-{
-}
-
-void Paddle::saveToFile(ofstream& file)
-{
 }

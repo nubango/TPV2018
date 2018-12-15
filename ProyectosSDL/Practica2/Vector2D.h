@@ -33,6 +33,7 @@ public:
 	// Operando producto de un vector por un escalar
 	double operator*(const Vector2D& d) const;
 
+	//friend std::istream& operator<<(std::istream& is, Vector2D& v);
 	/// Para debug: operando para el cout
 	friend std::ostream& operator<<(std::ostream& os, const Vector2D& v);
 };

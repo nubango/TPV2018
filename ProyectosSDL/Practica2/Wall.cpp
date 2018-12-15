@@ -16,8 +16,7 @@ Wall::~Wall()
 
 bool Wall::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & collVector)
 {
-	// SDL_HasIntersection comprueba si hay colision entre dos SDL_Rects
-	if (SDL_HasIntersection(&rect, &getRect()))
+	if (ArkanoidObject::collides(rect, vel, collVector))
 	{
 		collVector = normal_;
 		return true;

@@ -4,7 +4,8 @@ const std::string Game::IMAGE_PATH = "..\\sprites\\";
 const std::string Game::LEVEL_PATH = "..\\levels\\level0";
 const std::string Game::LEVEL_EXTENSION = ".ark";
 
-Game::Game() : window_(nullptr), renderer_(nullptr), exit_(false), numLevel_(1)
+Game::Game() :
+	window_(nullptr), renderer_(nullptr), exit_(false), loaded_(false), win_(false), menu_(true), numLevel_(1), numLives_(3), code_(0)
 {
 	// Se inicializa SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -20,21 +21,31 @@ Game::Game() : window_(nullptr), renderer_(nullptr), exit_(false), numLevel_(1)
 		textures_[i]->load(IMAGE_PATH + textureAttributes_[i].filename, textureAttributes_[i].rows, textureAttributes_[i].cols);
 	}
 
+	// Se crean los objetos del menu
+	MenuButton* newButton = new MenuButton({ WIN_WIDTH / 4, WIN_HEIGHT / 2 }, 100, 50, textures_[NewGameTex]);
+	MenuButton* loadButton = new MenuButton({ WIN_WIDTH / 4 * 3, WIN_HEIGHT / 2 }, 100, 50, textures_[LoadGameTex]);
+
+	// Se agregan los objetos a la lista de menu
+	menuObjects_.push_back(newButton);
+	menuObjects_.push_back(loadButton);
+
 	// Se crean los objetos de la escena
 	Wall* leftSideWall = new Wall({ 0,0 }, WALL_SIZE, WIN_HEIGHT, { 1,0 }, textures_[SideWallTex]);
 	Wall* rightSideWall = new Wall({ WIN_WIDTH - WALL_SIZE,0 }, WALL_SIZE, WIN_HEIGHT, { -1,0 }, textures_[SideWallTex]);
 	Wall* topWall = new Wall({ 0,0 }, WIN_WIDTH, WALL_SIZE, { 0,1 }, textures_[TopWallTex]);
 	Paddle * paddle = new Paddle({ WIN_WIDTH / 2 - PADDLE_WIDTH / 2,WIN_HEIGHT - 20 }, { 0,0 }, 7, PADDLE_WIDTH, PADDLE_HEIGHT, textures_[PaddleTex]);
+	Ball * ball = new Ball({ WIN_WIDTH / 2,WIN_HEIGHT - 20 - PADDLE_HEIGHT }, { 0,0 }, 5, BALL_SIZE, BALL_SIZE, textures_[BallTex], this);
+	BlocksMap * blocksMap = new BlocksMap({ double(WALL_SIZE),double(WALL_SIZE) }, WIN_WIDTH - (WALL_SIZE * 2), (WIN_HEIGHT / 2) - WALL_SIZE, textures_[BricksTex]);
 
+	// Se agregan los objetos a la lista de objetos de juego
 	objects_.push_back(leftSideWall);
 	objects_.push_back(rightSideWall);
 	objects_.push_back(topWall);
 	objects_.push_back(paddle);
+	objects_.push_back(ball);
+	objects_.push_back(blocksMap);
 
-	objects_.push_back(new Ball({ WIN_WIDTH / 2,WIN_HEIGHT - 20 - PADDLE_HEIGHT }, { 0,0 }, 5, BALL_SIZE, BALL_SIZE, textures_[BallTex], this));
-	objects_.push_back(new BlocksMap({ double(WALL_SIZE),double(WALL_SIZE) }, WIN_WIDTH - (WALL_SIZE * 2), WIN_HEIGHT / 2, textures_[BricksTex]));
-	// objects_.back()->loadFromFile(LEVEL_PATH + to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
-
+	// Se agregan los objetos a la lista de colisionables
 	collisionable_.push_back(leftSideWall);
 	collisionable_.push_back(rightSideWall);
 	collisionable_.push_back(topWall);
@@ -51,6 +62,12 @@ Game::~Game()
 	for (ArkanoidObject* o : objects_)
 	{
 		objects_.pop_back();
+		delete o;
+	}
+
+	for (ArkanoidObject* o : menuObjects_)
+	{
+		menuObjects_.pop_back();
 		delete o;
 	}
 
@@ -77,25 +94,32 @@ void Game::render() const
 {
 	SDL_RenderClear(renderer_);
 
-	for (ArkanoidObject* o : objects_)
-		o->render();
+	if (menu_)
+	{
+		for (ArkanoidObject* o : menuObjects_)
+			o->render();
+	}
+	else
+	{
+		for (ArkanoidObject* o : objects_)
+			o->render();
+	}
 
 	SDL_RenderPresent(renderer_);
 }
 
 void Game::update()
 {
-	for (ArkanoidObject* o : objects_)
-		o->update();
-
-	//for (auto it = objects_.begin(); it != objects_.end(); ++it)
-	//{
-	//	// (*(it++)->update());
-	//	auto next = it;
-	//	++next;
-	//	(*it)->update();
-	//	it = next;
-	//}
+	if (menu_)
+	{
+		for (ArkanoidObject* o : menuObjects_)
+			o->update();
+	}
+	else
+	{
+		for (ArkanoidObject* o : objects_)
+			o->update();
+	}
 }
 
 void Game::handleEvents()
@@ -111,36 +135,57 @@ void Game::handleEvents()
 				exit_ = true;
 		}
 
-		for (ArkanoidObject* o : objects_)
-			o->handleEvent(event);
+		if (menu_)
+		{
+			if (event.type == SDL_MOUSEBUTTONDOWN)
+			{
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				if (x < WIN_WIDTH / 2)
+					loaded_ = false;
+				else if (x > WIN_WIDTH / 2)
+					loaded_ = true;
+				menu_ = false;
+			}
+			menuLoaded();
+		}
+		else
+		{
+			for (ArkanoidObject* o : objects_)
+				o->handleEvent(event);
+		}
 	}
+}
+
+void Game::menuLoaded()
+{
+	// Carga de archivo los datos necesarios
+	if (loaded_)
+		loadGame(std::to_string(code_) + LEVEL_EXTENSION);
+	else
+		loadGame(LEVEL_PATH + std::to_string(numLevel_) + LEVEL_EXTENSION); // ..\\levels\\level01.ark
 }
 
 bool Game::collides(const SDL_Rect & rect, const Vector2D & vel, Vector2D & collVector)
 {
-	//// Si la componente Y de la bola esta en el espacio del mapa de bloques
-	//if (ball_->getPos().getY() < blocksmap_->getBottomLimit() + 50)
-	//{
-	//	Block* block = blocksmap_->collides(ball_->getDestRect(), vel, collVector);
-	//	if (block != nullptr)
-	//	{
-	//		blocksmap_->hitBlock(block); // Elimina el bloque con el que colisiona la bola
-	//		if (blocksmap_->getNumBlocks() == 0)
-	//			win_ = true;
-	//		return true;
-	//	}
-	//}
+	BlocksMap* blocksMap = static_cast<BlocksMap*>(objects_.back());
+	Block* block = blocksMap->collidesBlock(rect, vel, collVector);
 
-	// Block* block = objects_.back()->collidesMap(rect, vel, collVector);
+	if (block != nullptr)
+	{
+		blocksMap->hitBlock(block); // Elimina el bloque con el que colisiona la bola
+		if (blocksMap->getNumBlocks() == 0)
+			win_ = true;
+		return true;
+	}
 
 	// Muros y Paddle
 	for (ArkanoidObject* o : collisionable_)
 	{
 		if (o->collides(rect, vel, collVector))
 			return true;
-		else
-			return false;
 	}
+	return false;
 }
 
 void Game::loadGame(string const& filename)
@@ -152,31 +197,42 @@ void Game::loadGame(string const& filename)
 		throw ("Error: no se encuentra el fichero " + filename);
 	else
 	{
-		for (ArkanoidObject* o : objects_)
-			o->loadFromFile(file);
+		if (loaded_)
+		{
+			for (ArkanoidObject* o : objects_)
+				o->loadFromFile(file);
+		}
+		else
+			// Si no es un archivo de guardado solo necesitamos la informacion de blocksMap
+			// que es el ultimo objeto de la lista
+			static_cast<BlocksMap*>(objects_.back())->loadFromFile(file);
 	}
 
 	file.close();
 }
 
-void Game::saveGame(ofstream& file)
+void Game::saveGame()
 {
 	// Version cutre: leer desde consola
 	// Version buena: leer desde SDL (capturar numeros con decenas, centenas, etc...)
-	// int code = readCode();
+
+	code_; // = readCode();
 	// Crear fichero con ese nombre
-	// ofstream file;
-	// Se escribe en el fichero:
-	// Se llama a saveToFile() de cada objeto
-	//for (auto o : objects_)
-	//	o->saveToFile(file);
+	ofstream file;
+	file.open(std::to_string(code_) + LEVEL_EXTENSION);
+
+	file << numLevel_ << " " << numPoints_ << " " << numLives_;
+
+	for (ArkanoidObject* o : objects_)
+		o->saveToFile(file);
+
 	// El ejercicio es que la escena se guarde exactamente igual, no como en un juego
 	// El bucle for va a dar fallos porque hay que saber donde acaban los objetos y donde comienzan los premios
 	// Por ejemplo, con un atributo para saber cual es el firstReward (un entero)
 	// for (int i = 0; i < firstReward; i++)
-	//	objects_[i]->saveToFile();
+	// objects_[i]->saveToFile();
 	// Es mas facil con una class RewardsManager (paralelismo a BlocksMap) pero no es el "ejercicio"
-	// file.close();
+	file.close();
 }
 
 void Game::killObject(list<ArkanoidObject>::iterator it)
@@ -186,4 +242,45 @@ void Game::killObject(list<ArkanoidObject>::iterator it)
 	//delete *it; // borra el propio reward
 	//// eliminar de la lista el elemento
 	//objects_.erase(it);
+}
+
+bool Game::isCollidingPaddle(const SDL_Rect & rect)
+{
+	Paddle* paddle = nullptr;
+	for (ArkanoidObject* o : objects_)
+		paddle = static_cast<Paddle*>(o);
+
+	return SDL_HasIntersection(&rect, &paddle->getRect());
+}
+
+void Game::nextLevel()
+{
+	numLevel_++;
+	BlocksMap* blocksMap = static_cast<BlocksMap*>(objects_.back());
+	ifstream file;
+	file.open(LEVEL_PATH + std::to_string(numLevel_) + LEVEL_EXTENSION);
+	blocksMap->loadFromFile(file);
+}
+
+void Game::addLive()
+{
+	numLives_++;
+}
+
+void Game::biggerPaddle()
+{
+	Paddle* paddle = nullptr;
+	for (ArkanoidObject* o : objects_)
+		paddle = static_cast<Paddle*>(o);
+
+	paddle->setW(paddle->getW() * 1.5);
+}
+
+void Game::smallerPaddle()
+{
+	Paddle* paddle = nullptr;
+	for (ArkanoidObject* o : objects_)
+		paddle = static_cast<Paddle*>(o);
+
+	paddle->setW(paddle->getW() * 0.75);
 }

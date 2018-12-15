@@ -1,0 +1,9 @@
+Nuria Bango
+Javier Camacho
+_____________________________________
+
+Destacamos que la práctica está sin finalizar debido a que un fallo indetectable en la colisión de los bloques nos ha hecho perder tiempo. La estructura de los Rewards está implementada pero no son funcionales.
+Las excepciones no están recogidas con la estructura (que si está creada) de herencia de excepciones.
+Por otra parte la carga de partida guardada mediante código numérico no funciona correctamente.
+
+En general, cabe destacar que todas las funcionalidades que están incompletas son necesarias para la práctica 3 y para entonces todo funcionará correctamente.

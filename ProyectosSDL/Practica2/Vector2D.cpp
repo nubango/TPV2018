@@ -40,8 +40,15 @@ double Vector2D::operator*(const Vector2D & d) const
 	return d.x_ * x_ + d.y_ * y_;
 }
 
+//std::istream & operator<<(std::istream & is, Vector2D & v)
+//{
+//	is >> v.x_;
+//	is >> v.y_;
+//	return is;
+//}
+
 std::ostream & operator<<(std::ostream & os, const Vector2D & v)
 {
-	os << '(' << v.x_ << ',' << v.y_ << ')';
+	os << v.x_ << ' ' << v.y_ << std::endl;
 	return os;
 }

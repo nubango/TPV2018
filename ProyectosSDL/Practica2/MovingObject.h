@@ -15,6 +15,8 @@ public:
 	MovingObject(Vector2D pos, Vector2D dir, double speed, uint width, uint height, Texture * texture);
 	virtual ~MovingObject();
 
+	virtual void update();
+
 	virtual void loadFromFile(ifstream& file);
 	virtual void saveToFile(ofstream& file);
 };
