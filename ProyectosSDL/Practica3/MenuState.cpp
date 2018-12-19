@@ -44,6 +44,8 @@ void MenuState::update()
 void MenuState::render()
 {
 	GameState::render();
+
+	game_->getTexture("Logo")->render({ 250,50,500,200 });
 }
 
 bool MenuState::onEnter()

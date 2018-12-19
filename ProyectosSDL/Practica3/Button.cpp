@@ -24,7 +24,6 @@ bool Button::handleEvent(const SDL_Event & event)
 		if (SDL_PointInRect(&mouse, &getRect()))
 		{
 			currentState_ = MOUSE_CLICK;
-			SDL_Log("Clicked");
 			callback_(game_);
 			return true;
 		}
