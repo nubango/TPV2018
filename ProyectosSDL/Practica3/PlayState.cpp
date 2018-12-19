@@ -15,7 +15,24 @@ PlayState::~PlayState()
 
 bool PlayState::handleEvent(const SDL_Event & e)
 {
-	if (GameState::handleEvent(e)) return true;
+	if (GameState::handleEvent(e))
+		return true;
+
+	if (e.type == SDL_KEYDOWN)
+	{
+		switch (e.key.keysym.sym)
+		{
+		case SDLK_RETURN:
+		case SDLK_KP_ENTER:
+			Game::toEndState(game_);
+			break;
+
+		case SDLK_ESCAPE:
+			Game::toPauseState(game_);
+			break;
+		}
+		return true;
+	}
 	return false;
 }
 
