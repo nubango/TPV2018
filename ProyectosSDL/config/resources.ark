@@ -1,0 +1,17 @@
+11
+Ball ball.png 1 1
+Blocks bricks.png 2 3
+Paddle paddle.png 1 1
+SideWall side.png 1 1
+TopWall topside.png 1 1
+Logo logo.png 1 1
+Rewards rewards.png 10 8
+ExitButton exit.png 1 3
+PlayButton button.png 1 3
+MenuButton main.png 1 3
+ResumeButton resume.png 1 3
+4
+8Chimera NES-Chimera.ttf 8
+10Chimera NES-Chimera.ttf 10
+12Chimera NES-Chimera.ttf 12
+14Chimera NES-Chimera.ttf 14
